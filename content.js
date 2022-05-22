@@ -1,30 +1,38 @@
+"use strict";
+
 let timer;
 let errorMsg = 'Cannot get appointment date may be because account is not setup or may because of account suspension! please increase time interval for account ban issues!';
 
 // receive message from popup.js
-function gotMessage(message, sender, sendResponse) {
+browser.runtime.onMessage.addListener(request => {
     // check when set button is clicked
-    if (message.type === 'timer') {
-        localStorage.setItem('timer', message.time);
+    if (request.type === 'timer') {
+        localStorage.setItem('timer', request.time);
 
-        timer = message.time;
+        timer = request.time;
 
         // sends response to popup.js
-        sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
+        // sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
 
         let timeout = setTimeout(() => {
             window.location.reload();
         }, timer * 1000);
 
-        alert('Timer set to ' + localStorage.getItem('timer') + ' seconds!');
+        // delay the alert otherwise Promise will be execute first and this cant send alert
+        setTimeout(function () {
+            //your code to be executed after 1 second
+            alert('Timer set to ' + localStorage.getItem('timer') + ' seconds!');
+        }, 1);
+
+        return Promise.resolve({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
     }
     // check when popup is opened
-    if (message.type === 'appointmentDate') {
-        sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
+    if (request.type === 'appointmentDate') {
+        // sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
+        return Promise.resolve({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
     }
-}
 
-chrome.runtime.onMessage.addListener(gotMessage);
+});
 
 // set timer value
 timer = (localStorage.getItem('timer') ?? 30) * 1000; //default value as 30 sec if null initially
@@ -53,7 +61,7 @@ let timeout = setTimeout(() => {
 }, timer);
 
 function notify(newAppointmentDate) {
-    chrome.runtime.sendMessage('', {
+    browser.runtime.sendMessage({
         type: 'notification',
         options: {
             title: 'Visa Appointment Date',
