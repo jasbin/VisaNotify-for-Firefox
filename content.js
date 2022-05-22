@@ -11,31 +11,22 @@ browser.runtime.onMessage.addListener(request => {
 
         timer = request.time;
 
-        // sends response to popup.js
-        // sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
-
         let timeout = setTimeout(() => {
             window.location.reload();
         }, timer * 1000);
 
-        // delay the alert otherwise Promise will be execute first and this cant send alert
-        setTimeout(function () {
-            //your code to be executed after 1 second
-            alert('Timer set to ' + localStorage.getItem('timer') + ' seconds!');
-        }, 1);
-
-        return Promise.resolve({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
-    }
-    // check when popup is opened
-    if (request.type === 'appointmentDate') {
-        // sendResponse({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
-        return Promise.resolve({ timer: timer, appointmentDate: localStorage.getItem('appointmentDate') ?? 'Waiting For Appointment Date...' });
+        alert('Timer set to ' + localStorage.getItem('timer') + ' seconds!');
     }
 
+    // sends the updated timer to background.js localStorage
+    browser.runtime.sendMessage({
+        type: 'setTimeAndDate',
+        data: { timer: timer ?? localStorage.getItem('timer'), appointmentDate: localStorage.getItem('appointmentDate') }
+    });
 });
 
 // set timer value
-timer = (localStorage.getItem('timer') ?? 30) * 1000; //default value as 30 sec if null initially
+timer = (localStorage.getItem('timer') ?? 60) * 1000; //default value as 30 sec if null initially
 
 // get appointment date
 let node = document.getElementsByClassName('leftPanelText')[0];
@@ -65,7 +56,7 @@ function notify(newAppointmentDate) {
         type: 'notification',
         options: {
             title: 'Visa Appointment Date',
-            message: newAppointmentDate,
+            newAppointmentDate: newAppointmentDate,
             iconUrl: '/images/bell_16.png',
             type: 'basic'
         }

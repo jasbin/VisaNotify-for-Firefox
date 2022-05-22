@@ -1,17 +1,30 @@
 "use strict";
 
-let t = document.getElementById('timeInterval').value = localStorage.getItem('timer') ?? 30;
+let t = document.getElementById('timeInterval').value = localStorage.getItem('timer') ?? 60;
 document.getElementById('timerDetails').innerHTML = "<p>Timer Set to <span style='color:blue'><strong>" + t + "</strong></span> seconds</p>";
-document.getElementById('appointmentDate').innerHTML = localStorage.getItem('appointmentDate');
+// document.getElementById('appointmentDate').innerHTML = localStorage.getItem('appointmentDate');
 
 let allowedUrl = [
    'https://cgifederal.secure.force.com/applicanthome',
    'https://cgifederal.secure.force.com/ApplicantHome'
 ];
 
+// hande response from background.js(it responds latest appointment date from its localStorage)
+function handleResponse(message) {
+   console.log(message);
+   document.getElementById('appointmentDate').innerText = message.appointmentDate;
+}
+
+function handleError(error) {
+   console.log(`Error: ${error}`);
+}
+
+let sending = browser.runtime.sendMessage({
+   type: "getAppointmentDate"
+});
+sending.then(handleResponse, handleError);
 
 // check current tab url
-
 browser.tabs.query({
    currentWindow: true,
    active: true
@@ -24,18 +37,17 @@ function sendMessageToTabs(tabs) {
       initialize(tabs);
    }
 
-   // send data to popup method
-
+   // initialize the popup
    browser.tabs.sendMessage(
       tabs[0].id,
       {
          type: 'timer',
-         time: time.value ?? 30 // if time value is null set default value to 30 seconds
+         time: time.value ?? 60 // if time value is null set default value to 60 seconds
       }
    ).then(response => {
-      let t = document.getElementsByClassName('time')[0].innerText = response.timer ?? localStorage.getItem('timer');
-      document.getElementById('appointmentDate').innerHTML = response.appointmentDate;
-      localStorage.setItem('appointmentDate', response.appointmentDate);
+      // document.getElementsByClassName('time')[0].innerText = response.timer ?? localStorage.getItem('timer');
+      // document.getElementById('appointmentDate').innerHTML = response.appointmentDate;
+      // localStorage.setItem('appointmentDate', response.appointmentDate);
    }).catch(onError);
 }
 
@@ -54,14 +66,14 @@ function initialize(tabs) {
             tabs[0].id,
             {
                type: 'timer',
-               time: time.value ?? 30 // if time value is null set default value to 30 seconds
+               time: time.value ?? 60 // if time value is null set default value to 60 seconds
             }
          ).then(response => {
-            // update the popup.html timer and appointment date
-            let t = document.getElementsByClassName('time')[0].value = response.timer;
-            document.getElementById('appointmentDate').innerHTML = response.appointmentDate;
-            localStorage.setItem('appointmentDate', response.appointmentDate);
-            localStorage.setItem('timer', response.timer);
+            // // update the popup.html timer and appointment date
+            // let t = document.getElementsByClassName('time')[0].value = response.timer;
+            // document.getElementById('appointmentDate').innerHTML = response.appointmentDate;
+            // // localStorage.setItem('appointmentDate', response.appointmentDate);
+            // // localStorage.setItem('timer', response.timer);
          }).catch(onError);
 
       }
