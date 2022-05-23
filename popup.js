@@ -11,7 +11,6 @@ let allowedUrl = [
 
 // hande response from background.js(it responds latest appointment date from its localStorage)
 function handleResponse(message) {
-   console.log(message);
    document.getElementById('appointmentDate').innerText = message.appointmentDate;
 }
 

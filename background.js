@@ -17,7 +17,6 @@ function handleRequest(message) {
         notifyWithAudio();
 
         localStorage.setItem('appointmentDate', message.options.newAppointmentDate);
-        console.log('appointmentDate from content scripts: ', message.options.newAppointmentDate);
     } 
 
     // receives request of new appointmentDate from popup.js
@@ -28,7 +27,6 @@ function handleRequest(message) {
 
     // receives timer data from content.js
     if (message.type === 'setTimeAndDate'){
-      console.log('set time and date called in bg');
       localStorage.setItem('timer', message.data.timer);
       localStorage.setItem('appointmentDate', message.data.appointmentDate);
     }
