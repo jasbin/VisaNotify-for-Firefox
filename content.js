@@ -1,6 +1,7 @@
 "use strict";
 
 let timer;
+let timeout;
 let errorMsg = 'Cannot get appointment date may be because account is not setup or may because of account suspension! please increase time interval for account ban issues!';
 
 // receive message from popup.js
@@ -11,18 +12,20 @@ browser.runtime.onMessage.addListener(request => {
 
         timer = request.time;
 
-        let timeout = setTimeout(() => {
+
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
             window.location.reload();
         }, timer * 1000);
 
+        // sends the updated timer to background.js localStorage
+        browser.runtime.sendMessage({
+            type: 'setTime',
+            data: { timer: timer ?? localStorage.getItem('timer') }
+        });
+
         alert('Timer set to ' + localStorage.getItem('timer') + ' seconds!');
     }
-
-    // sends the updated timer to background.js localStorage
-    browser.runtime.sendMessage({
-        type: 'setTimeAndDate',
-        data: { timer: timer ?? localStorage.getItem('timer'), appointmentDate: localStorage.getItem('appointmentDate') }
-    });
 });
 
 // set timer value
@@ -35,6 +38,12 @@ let newAppointmentDate = null;
 
 try {
     newAppointmentDate = node.innerText;
+
+    // send current appointment date to background in every refresh
+    browser.runtime.sendMessage({
+        type: 'setAppointmentDate',
+        data: { appointmentDate: newAppointmentDate ?? localStorage.getItem('appointmentDate') }
+    });
 } catch (error) {
     alert(errorMsg);
     clearTimeout(timeout);
@@ -42,12 +51,14 @@ try {
 
 let oldAppointmentDate = localStorage.getItem('appointmentDate') ?? null;
 localStorage.setItem('appointmentDate', newAppointmentDate);
+// sends the updated timer to background.js localStorage
+
 if (newAppointmentDate !== null && oldAppointmentDate !== newAppointmentDate) {
     notify(newAppointmentDate);
     localStorage.setItem('appointmentDate', newAppointmentDate);
 }
 
-let timeout = setTimeout(() => {
+timeout = setTimeout(() => {
     window.location.reload();
 }, timer);
 

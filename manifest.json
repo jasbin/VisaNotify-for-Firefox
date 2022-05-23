@@ -35,10 +35,5 @@
         "activeTab",
         "storage",
         "notifications"
-    ],
-    "browser_specific_settings": {
-        "gecko": {
-            "id": "2ddc0044-330f-4d21-80d9-285f13ffebc9@jasbin.com.np"
-        }
-    }
+    ]
 }
