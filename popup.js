@@ -15,20 +15,6 @@ let allowedUrl = [
    'https://cgifederal.secure.force.com/ApplicantHome'
 ];
 
-// // hande response from background.js(it responds latest appointment date from its localStorage)
-// function handleResponse(message) {
-//    document.getElementById('appointmentDate').innerText = message.appointmentDate;
-// }
-
-// function handleError(error) {
-//    console.log(`Error: ${error}`);
-// }
-
-// let sending = browser.runtime.sendMessage({
-//    type: "getAppointmentDate"
-// });
-// sending.then(handleResponse, handleError);
-
 // // check current tab url
 browser.tabs.query({
    currentWindow: true,

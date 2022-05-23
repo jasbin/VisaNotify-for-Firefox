@@ -19,12 +19,6 @@ function handleRequest(message) {
         localStorage.setItem('appointmentDate', message.options.newAppointmentDate);
     } 
 
-    // // receives request of new appointmentDate from popup.js
-    // if (message.type === 'getAppointmentDate'){
-    //   let date = localStorage.getItem('appointmentDate');
-    //   return Promise.resolve({appointmentDate: date});
-    // }
-
     // receives timer data from content.js
     if (message.type === 'setTime'){
       localStorage.setItem('timer', message.data.timer);
