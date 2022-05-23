@@ -8,7 +8,7 @@ function handleRequest(message) {
       if (message.type === 'notification') {
         browser.notifications.create({
           "type": "basic",
-          "iconUrl": browser.extension.getURL(message.options.iconUrl),
+          "iconUrl": message.options.iconUrl,
           "title": message.options.title,
           "message": message.options.newAppointmentDate,
           "priority": 1
