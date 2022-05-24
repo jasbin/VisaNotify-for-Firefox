@@ -1,8 +1,8 @@
 "use strict";
 
-let t = document.getElementById('timeInterval').value = localStorage.getItem('timer') ?? 60;
-document.getElementById('timerDetails').innerHTML = "<p>Timer Set to <span style='color:blue'><strong>" + t + "</strong></span> seconds</p>";
-document.getElementById('appointmentDate').innerHTML = localStorage.getItem('appointmentDate') ?? 'unable to fetch dates';
+let t = document.getElementById('timeInterval').value = localStorage.getItem('timer');
+document.getElementById('timerDetails').textContent = t ?? 'undefined';
+document.getElementById('appointmentDate').textContent = localStorage.getItem('appointmentDate') ?? 'unable to fetch dates';
 
 let allowedUrl = [
    'https://cgifederal.secure.force.com/applicanthome',
@@ -47,7 +47,7 @@ function initialize(tabs) {
                }
             ).then(response => { }).catch(onError);
             // immediately update the popup timer details when timer value is changed
-            document.getElementById('timerDetails').innerHTML = "<p>Timer Set to <span style='color:blue'><strong>" + time.value + "</strong></span> seconds</p>";
+            document.getElementById('timerDetails').textContent = time.value;
          }
       }
    } catch (e) {

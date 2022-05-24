@@ -1,7 +1,7 @@
 body{
     border-color: aqua;
     width: 290px;
-    height: 335px;
+    height: 345px;
     background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
@@ -9,4 +9,14 @@ body{
 }
 .time{
     width: 50%;
+}
+#appointmentDate{
+    font-weight: 650;
+    color: green;
+    font-size: large;
+}
+
+#timerDetails{
+    color: blue;
+    font-weight: bold;
 }
