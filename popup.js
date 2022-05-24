@@ -1,11 +1,5 @@
 "use strict";
 
-// let timerAlreadySet = localStorage.getItem('timer');
-// if (timerAlreadySet === null) {
-//    console.log('timer value not set and is null');
-// } else {
-//    console.log(localStorage.getItem('timer'));
-// }
 let t = document.getElementById('timeInterval').value = localStorage.getItem('timer') ?? 60;
 document.getElementById('timerDetails').innerHTML = "<p>Timer Set to <span style='color:blue'><strong>" + t + "</strong></span> seconds</p>";
 document.getElementById('appointmentDate').innerHTML = localStorage.getItem('appointmentDate') ?? 'unable to fetch dates';
