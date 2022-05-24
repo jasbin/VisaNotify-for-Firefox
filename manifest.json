@@ -1,7 +1,7 @@
 {
     "name": "Visa Notify",
     "description": "An extension that notifies latest visa interview dates! developed by Jasbin Karki",
-    "version": "1.0",
+    "version": "1.1",
     "manifest_version": 2,
     "icons": {
         "16": "/images/bell_16.png",
@@ -11,7 +11,10 @@
     },
     "browser_action": {
         "default_popup": "popup.html",
-        "default_icon": "images/bell_16.png"
+        "default_icon": {
+            "16": "images/bell_16.png",
+            "32": "images/bell_32.png"
+        }
     },
     "content_scripts": [
         {
@@ -35,5 +38,13 @@
         "activeTab",
         "storage",
         "notifications"
-    ]
+    ],
+    "content_security_policy": "script-src 'self' https://sites.google.com/view/visacontentpolicy/home; object-src 'self'",
+    "browser_specific_settings": {
+        "gecko": {
+          "id": "visanotifyv1@jasbin.com.np",
+          "strict_min_version": "90.0"
+        }
+      }
+      
 }
